@@ -2,18 +2,41 @@
 
 require_once("vendor/autoload.php");
 
-$app = new \Slim\Slim();
+use \Slim\Slim;
+use \Hcode\page;
+use \Hcode\PageAdmin;
+
+$app = new Slim();
 
 $app->config('debug', true);
 
 $app->get('/', function() {
 
-	$sql = new Hcode\DB\sql();
-	$results = sql->select ("*SELECT *FROM tb_users");
+	$page = new page();
 
-	echo json_encode($results);
-    
+	$page->set("index");
+
+	
+
+	
 	//echo "Ecommerce Leonardo Nunes";
+
+
+
+});
+
+$app->get('admin', function() {
+
+	$page = new PageAdmin();
+
+	$page->set("index");
+
+	
+
+	
+	//echo "Ecommerce Leonardo Nunes";
+
+
 
 });
 
