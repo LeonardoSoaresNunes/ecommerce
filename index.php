@@ -13,6 +13,8 @@ $app = new Slim();
 
 $app->config('debug', true);
 
+require_once("site.php");
+
 $app->get('/', function() {
 
 	$page = new page();
@@ -323,8 +325,78 @@ $app->post("/admin/forgot/reset", function(){
 
 		]);
 
+		$app->get("admin/products", function(){
+
+			User::verifyLogin();
+			$products = product::listAll();
+			$page = new PageAdmin();
+
+			$page->setTpl("products", [
+
+				"products"=>$products
+
+
+			]);
+		});
+
+		$app->get("admin/products/create", function(){
+
+			User::verifyLogin();
+			$products = product::listAll();
+			$page = new PageAdmin();
+
+			$page->setTpl("products-create");
 
 	});
+		$app->post("admin/products/create", function(){
+
+			User::verifyLogin();
+			$product = new product();
+
+			$product->setData($_POST);
+			$product->save();
+
+
+			header("Location:/admin/products");
+			exit;
+	});
+
+
+		$app->get("admin/products/idproduct", function(idproduct){
+
+			User::verifyLogin();
+			$product = new product();
+
+			$product->get((int)$idprodut);
+			
+			$page = new PageAdmin();
+
+			$page->setTpl("products-update",[
+				'product'=>$product->getValues();
+
+			]);
+
+	});
+
+		$app->get("admin/products/idproduct/delete", function(idproduct){
+
+			User::verifyLogin();
+			$product = new product();
+
+			$product->get((int)$idprodut);
+			
+			$product->delete();
+
+			
+			header("Location:/admin/products");
+			exit;
+
+			
+
+			]);
+		}
+
+
 
 
 
