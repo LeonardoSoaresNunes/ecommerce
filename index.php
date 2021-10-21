@@ -8,6 +8,7 @@ use \Slim\Slim;
 use \Hcode\page;
 use \Hcode\PageAdmin;
 use\Hcode\Model\user;
+USE\Hcode\Model\product;
 
 $app = new Slim();
 
@@ -394,7 +395,77 @@ $app->post("/admin/forgot/reset", function(){
 			
 
 			]);
-		}
+		});
+
+
+		$app->("/categories/:idcategory/products", function($idcategory){
+
+			User::verifyLogin();
+
+			$category = new Category();
+
+			$category->get((int)$idcategory);
+
+			$category->get((int)$idcategory);
+
+
+			$page = new PageAdmin();
+
+			$page->setTpl("categories-products", [
+				'category'=>$category->getValues();
+				'productsRelated'=>$category->getProducts(),
+				'productsRelated'=>$category->getProducts(false),
+
+			]);
+
+			$app->("/categories/:idcategory:idproduct/add", function($idcategory , $idprodut){
+
+			User::verifyLogin();
+
+			$category = new Category();
+
+			$category->get((int)$idcategory);
+
+			$category->get((int)$idcategory);
+
+
+			$product = new product();
+			$product->get((int)$idprodut);
+			$category->addProduct($product);
+
+			header("Location:/admin/categories/".$idcategory."products");
+			exit;
+
+
+			
+
+			});
+
+			
+			$app->("/categories/:idcategory:idproduct/remove", function($idcategory , $idprodut){
+
+			User::verifyLogin();
+
+			$category = new Category();
+
+			$category->get((int)$idcategory);
+
+			$category->get((int)$idcategory);
+
+
+			$product = new product();
+			$product->get((int)$idprodut);
+			$category->removeProduct($product);
+
+			header("Location:/admin/categories/".$idcategory."products");
+			exit;
+
+
+			
+
+			});
+
+		});
 
 
 

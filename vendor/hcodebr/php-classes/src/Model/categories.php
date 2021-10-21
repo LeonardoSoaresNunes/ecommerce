@@ -72,6 +72,71 @@ public static function updateFile();
 	file_put_contents($_SERVER['DOCUMENT_ROOT']. DIRECTORY_SEPARATOR ."views". DIRECTORY_SEPARATOR ."categories-menu.html", implode('', $html));
 }
 
+public function getProducts($related = true)
+{
+
+	$sql = new sql();
+
+	if ($related === true){
+		return $sql->select("
+
+			SELECT *FROM tb_products WHERE idproducts IN (
+			SELECT a.idproducts
+			FROM tb_products a 
+			INNER JOIN tb_productscategoirs b ON a.idproducts = b.idproducts
+			WHERE b.idproducts = :idcategory
+
+			);
+
+			", [
+
+				":idcategory->getidcategory"()
+			]);
+
+
+	}else{
+		return $sql->select("
+
+			SELECT *FROM tb_products WHERE idproducts NOTE IN (
+			SELECT a.idproducts
+			FROM tb_products a 
+			INNER JOIN tb_productscategoirs b ON a.idproducts = b.idproducts
+			WHERE b.idproducts = :idcategory
+
+			);
+
+				", [
+
+				":idcategory->getidcategory"()
+			]);
+
+
+
+	}
+
+	public function addProduct(Product $product){
+
+		$sql = new sql();
+
+		$sql->query("INSERT INTO tb_productscategoirs (idcategory , idproduct)VALUES(:idcategory , :idproduct)",[
+			':idcategory '=>$this->getcategory(),
+			'idproduct'=>$product->getProduct(),
+
+		]);
+	}
+
+	public function removeProduct(Product $product){
+
+		$sql = new sql();
+
+		$sql->query("DELETE FROM tb_productscategoirs WHERE idcategory = :idcategory AND idproduct = :idproduct",[
+			':idcategory '=>$this->getcategory(),
+			'idproduct'=>$product->getProduct(),
+
+		]);
+	}
+}
+
 
 
 
